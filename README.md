@@ -1,3 +1,3 @@
 # README
 
-- clean up to infinite scroll
+- clean through infinite scroll
