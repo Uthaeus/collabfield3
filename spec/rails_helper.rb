@@ -1,4 +1,4 @@
-# This file is copied to spec/ when you run 'rails generate rspec:install'
+ # This file is copied to spec/ when you run 'rails generate rspec:install'
 require 'spec_helper'
 ENV['RAILS_ENV'] ||= 'test'
 require File.expand_path('../../config/environment', __FILE__)
@@ -27,43 +27,35 @@ require 'rspec/rails'
 ActiveRecord::Migration.maintain_test_schema!
 
 RSpec.configure do |config|
-  require 'capybara/poltergeist'
-  require 'factory_girl_rails'
-  require 'capybara/rspec'
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_path = "#{::Rails.root}/spec/fixtures"
 
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false
   # instead of true.
-  config.include Devise::Test::IntegrationHelpers, type: :feature 
-  config.include FactoryGirl::Syntax::Methods
-  Capybara.javascript_driver = :poltergeist
-  Capybara.server = :puma
   
+  # settings to clean database after tests where js: true
   config.use_transactional_fixtures = false
 
-  config.before(:suite) do 
+  config.before(:suite) do
     DatabaseCleaner.clean_with(:truncation)
   end
-
-  config.before(:each) do 
+ 
+  config.before(:each) do
     DatabaseCleaner.strategy = :transaction
   end
-
-  config.before(:each, :js => true) do 
+ 
+  config.before(:each, :js => true) do
     DatabaseCleaner.strategy = :truncation
   end
-
-  config.before(:each) do 
-    DatabaseCleaner.start 
+ 
+  config.before(:each) do
+    DatabaseCleaner.start
   end
-
-  config.before(:each) do 
-    DatabaseCleaner.clean 
+ 
+  config.after(:each) do
+    DatabaseCleaner.clean
   end
-
-
 
   # RSpec Rails can automatically mix in different behaviours to your tests
   # based on their file location, for example enabling you to call `get` and
@@ -84,4 +76,16 @@ RSpec.configure do |config|
   config.filter_rails_from_backtrace!
   # arbitrary gems may also be filtered via:
   # config.filter_gems_from_backtrace("gem name")
+
+
+  require 'capybara/poltergeist'
+  require 'factory_girl_rails'
+  require 'capybara/rspec'
+
+  config.include Devise::Test::IntegrationHelpers, type: :feature
+  config.include FactoryGirl::Syntax::Methods
+  Capybara.default_max_wait_time = 10
+  Capybara.javascript_driver = :poltergeist
+  Capybara.server = :puma 
+
 end
