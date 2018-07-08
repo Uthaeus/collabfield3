@@ -1,3 +1,3 @@
 # README
 
-- clean through infinite scroll
+- one error(.single-post-card) up to create a new conversation
